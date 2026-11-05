@@ -16,14 +16,23 @@ class Cancion:
     id: int
     titulo: str
     artista: str
-    energia: int      # de 1 a 10
+    bpm: int          # pulsaciones por minuto (el ritmo)
     duracion: float   # en segundos
 
     def __post_init__(self):
-        if not 1 <= self.energia <= 10:
-            raise ValueError("La energía tiene que estar entre 1 y 10")
+        if not 40 <= self.bpm <= 250:
+            raise ValueError("Los bpm tienen que estar entre 40 y 250")
         if self.duracion <= 0:
             raise ValueError("La duración tiene que ser mayor que 0")
+
+    @property
+    def energia(self) -> int:
+        """La energía (1 a 10) se calcula a partir de los bpm, no se guarda.
+
+        Cada 10 bpm por encima de 60 suma 1 de energía:
+        70 bpm -> 1, 100 bpm -> 4, 140 bpm -> 8, 160 bpm o más -> 10.
+        """
+        return min(10, max(1, (self.bpm - 60) // 10))
 
 
 @dataclass(frozen=True)

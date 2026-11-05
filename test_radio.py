@@ -6,9 +6,9 @@ from modelo import Cancion, Catalogo, Oyente, Pausa
 from criterios import afinidad, energia_objetivo, variedad
 from radio import Radio
 
-A = Cancion(1, "Arranque", "Los Pesos", energia=6, duracion=180)
-B = Cancion(2, "Sprint", "Nadia K", energia=9, duracion=200)
-C = Cancion(3, "Subida", "Los Pesos", energia=8, duracion=210)
+A = Cancion(1, "Arranque", "Los Pesos", bpm=125, duracion=180)
+B = Cancion(2, "Sprint", "Nadia K", bpm=155, duracion=200)
+C = Cancion(3, "Subida", "Los Pesos", bpm=145, duracion=210)
 
 
 def nueva_radio(canciones=(A, B, C), n_pausa=2):
@@ -20,16 +20,22 @@ def nueva_radio(canciones=(A, B, C), n_pausa=2):
     )
 
 
-def test_no_se_puede_crear_cancion_con_energia_invalida():
+def test_no_se_puede_crear_cancion_con_bpm_invalidos():
     with pytest.raises(ValueError):
-        Cancion(9, "X", "Y", energia=11, duracion=100)
+        Cancion(9, "X", "Y", bpm=0, duracion=100)
+
+
+def test_la_energia_se_calcula_con_los_bpm():
+    assert Cancion(9, "X", "Y", bpm=70, duracion=100).energia == 1
+    assert Cancion(9, "X", "Y", bpm=145, duracion=100).energia == 8
+    assert Cancion(9, "X", "Y", bpm=200, duracion=100).energia == 10
 
 
 def test_sin_historial_gana_la_energia_mas_cercana():
     assert nueva_radio().elegir_siguiente(Oyente("Ana")) == C
 
 
-def test_una_cancion_cortada_cuenta_para_la_variedad():
+def test_una_cancion_salteada_cuenta_para_la_variedad():
     oyente = Oyente("Ana")
     oyente.registrar_escucha(C, completa=False)  # la cortó
     # Los Pesos acaba de sonar, así que quedan afuera A y C.
