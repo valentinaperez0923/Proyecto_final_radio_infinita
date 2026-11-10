@@ -1,6 +1,7 @@
 """Los datos de la radio: canciones, pausas, escuchas, catálogo y oyente."""
 
 from dataclasses import dataclass # armar clases sin tener que escribir el init, repr, eq, etc.
+from collections import deque # una lista con tamaño máximo, que descarta los elementos más viejos cuando se agregan nuevos. Sirve para guardar el historial de escuchas de un oyente.
 from typing import Protocol # sirve para definir qué métodos y propiedades tiene que tener una clase para poder usarla en un contexto determinado. Es como una interfaz en otros lenguajes.
 
 
@@ -38,7 +39,9 @@ class Cancion:
 @dataclass(frozen=True) 
 class Pausa:
     duracion: float   # en segundos. Cumple con Emitible porque tiene duracion
-
+    def __post_init__(self):
+        if self.duracion <= 0:
+            raise ValueError("La duración de la pausa tiene que ser mayor que 0")
 
 @dataclass(frozen=True)
 class Escucha:
@@ -63,9 +66,12 @@ class Catalogo:
 class Oyente:
     """La única pieza que cambia: va guardando todo lo que escuchó."""
 
-    def __init__(self, nombre: str):
+    def __init__(self, nombre: str, memoria: int = 100):
+        if memoria < 1:
+            raise ValueError("La memoria tiene que ser al menos 1")
         self.nombre = nombre
-        self._escuchas: list[Escucha] = []      # crea una lista vacia de escuchas, el "_" dice que es interno y que no se puede tocar desde afuera. 
+        self._escuchas: deque[Escucha] = deque(maxlen=memoria) 
+
 
     def registrar_escucha(self, cancion: Cancion, completa: bool) -> None:  # recibe la cancion y si se escucho completa. El -> None dice que no devuelve nada, solo anota.
         self._escuchas.append(Escucha(cancion, completa))       # Crea un objeto Escucha y lo agrega a la lista de escuchas del oyente.

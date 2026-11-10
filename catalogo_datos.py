@@ -1,3 +1,4 @@
+from modelo import Catalogo, Cancion
 CATALOGO = Catalogo((
     Cancion(1, "Arranque", "Los Pesos", bpm=125, duracion=180),
     Cancion(2, "Sprint", "Nadia K", bpm=155, duracion=200),
