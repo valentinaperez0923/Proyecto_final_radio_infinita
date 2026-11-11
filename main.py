@@ -20,6 +20,18 @@ def escucho_completa(cancion: Cancion) -> bool:
     return cancion.energia >= 7
 
 
+def texto_cancion(numero: int, cancion: Cancion, completa: bool) -> str:
+    """Función pura: arma el texto de una canción (no imprime nada)."""
+    como = "completa" if completa else "cortada"
+    return (f"{numero:2}. {cancion.titulo} - {cancion.artista} "
+            f"(energía {cancion.energia}) -> {como}")
+
+
+def texto_pausa(numero: int, duracion: float) -> str:
+    """Función pura: arma el texto de una pausa."""
+    return f"{numero:2}. --- Pausa de {duracion:.0f} segundos ---"
+
+
 def main(cantidad: int = 12) -> None:
     radio = Radio(
         CATALOGO,
@@ -30,15 +42,16 @@ def main(cantidad: int = 12) -> None:
     )
     oyente = Oyente("Ana")
 
-    for numero, elemento in enumerate(islice(radio.flujo(oyente), cantidad), 1):
+    # islice corta el flujo infinito después de `cantidad` elementos.
+    flujo = islice(radio.flujo(oyente), cantidad)
+
+    for numero, elemento in enumerate(flujo, 1):
         if isinstance(elemento, Cancion):
             completa = escucho_completa(elemento)
-            oyente.registrar_escucha(elemento, completa)
-            como = "completa" if completa else "cortada"
-            print(f"{numero:2}. {elemento.titulo} - {elemento.artista} "
-                  f"(energía {elemento.energia}) -> {como}")
+            oyente.registrar_escucha(elemento, completa)  # la radio aprende
+            print(texto_cancion(numero, elemento, completa))
         else:
-            print(f"{numero:2}. --- Pausa de {elemento.duracion:.0f} segundos ---")
+            print(texto_pausa(numero, elemento.duracion))
 
 
 if __name__ == "__main__":
