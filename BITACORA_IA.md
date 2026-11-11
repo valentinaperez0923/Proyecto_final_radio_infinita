@@ -77,12 +77,3 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Qué devolvió:** revisó nuestros archivos y encontró que faltaban `main.py` y `test_mas.py`, que varios archivos estaban en una versión vieja y que a `catalogo_datos.py` le faltaba la línea `from modelo import Cancion, Catalogo`.
 **Qué hicimos:** actualizamos todo y corrimos los tests.
 
----
-
-## Resumen de errores reales de la IA
-
-1. **UML con inconsistencias** (entrada 4): método `duracion_seg()` contra atributo `duracion`, y el criterio dibujado como clase.
-2. **Hueco en la variedad** (entrada 8): las canciones cortadas no contaban como "sonadas".
-3. **Burbuja de filtro** (entrada 10): la radio repetía siempre 3 canciones.
-4. **Energía mal modelada** (entrada 11): la IA la puso como un dato aparte, y la corregimos nosotras.
-5. **Test que no dejaba aprender a la radio** (entrada 12).
