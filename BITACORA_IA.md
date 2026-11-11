@@ -60,7 +60,7 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Quién:** Olivia. **Herramienta:** Claude
 **Qué se pidió:** corregimos a la IA: en su código la energía era un dato escrito a mano, pero nosotras habíamos decidido que se calcula a partir de los bpm.
 **Qué devolvió:** cambió `Cancion` para que guarde los bpm y calcule la energía.
-**Qué decidimos nosotras:** (completar: si se quedan con la fórmula que propuso la IA, "cada 10 bpm por encima de 60 suma 1 de energía", o usan otra).
+**Qué decidimos nosotras:** el puntaje se calcula de la siguiente manera: mientras más cerca esté el número de bpms del número objetivo, más puntos tiene la canción.
 
 ## 9. 05/11 – Revisión con otra conversación
 
