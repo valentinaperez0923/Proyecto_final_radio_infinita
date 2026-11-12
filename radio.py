@@ -1,66 +1,72 @@
-"""Criterios de elección. Todos son funciones puras que reciben (cancion, escuchas).
+"""La radio: elige la próxima canción y arma el flujo infinito con pausas."""
 
-- Los PUNTAJES devuelven un número: más alto = mejor.
-- Los FILTROS devuelven True/False: si da False, la canción no puede sonar ahora.
+from typing import Iterator
 
-`escuchas` es una tupla (no se puede modificar), así que con los mismos
-datos cada criterio devuelve siempre lo mismo.
-"""
-
-from typing import Callable
-
-from modelo import Cancion, Escucha
-
-# Nombres cortos para los tipos, así el resto del programa se lee mejor.
-Escuchas = tuple[Escucha, ...]
-Puntaje = Callable[[Cancion, Escuchas], float]
-Filtro = Callable[[Cancion, Escuchas], bool]
+from modelo import Catalogo, Oyente, Cancion, Pausa, Emitible
+from criterios import Escuchas, Puntaje, Filtro
 
 
-# ---------- PUNTAJES ----------
+def la_que_hace_mas_que_no_suena(canciones: tuple[Cancion, ...],
+                                 escuchas: Escuchas) -> Cancion:
+    """Función pura: la canción que sonó hace más tiempo (o que nunca sonó)."""
+    # Guarda en qué posición sonó cada canción por última vez.
+    ultima_vez = {}
+    for posicion, escucha in enumerate(escuchas):
+        ultima_vez[escucha.cancion.id] = posicion
 
-def afinidad(cancion: Cancion, escuchas: Escuchas) -> float:
-    """Cuántas veces se escuchó COMPLETA una canción de este artista."""
-    cantidad = 0
-    for e in escuchas:
-        if e.completa and e.cancion.artista == cancion.artista:
-            cantidad += 1
-    return float(cantidad)
-
-
-def energia_objetivo(objetivo: int) -> Puntaje:
-    """Crea un puntaje: más puntos cuanto más cerca esté la energía del objetivo."""
-    def puntaje(cancion: Cancion, escuchas: Escuchas) -> float:
-        return 10.0 - abs(cancion.energia - objetivo)
-    return puntaje
+    # Las que nunca sonaron valen -1, así que ganan. Si empatan, el id más chico.
+    return min(canciones, key=lambda c: (ultima_vez.get(c.id, -1), c.id))
 
 
-# ---------- FILTROS ----------
+def elegir(canciones: tuple[Cancion, ...], escuchas: Escuchas,
+           puntajes: tuple[Puntaje, ...], filtros: tuple[Filtro, ...]) -> Cancion:
+    """Función pura: con los mismos datos devuelve siempre la misma canción."""
+    # 1. Filtros: quedan solo las canciones que pasan todos.
+    candidatas = []
+    for c in canciones:
+        if all(filtro(c, escuchas) for filtro in filtros):
+            candidatas.append(c)
 
-def _sin_repetir(que_comparar, ultimas: int) -> Filtro:
-    """Base de los dos filtros de abajo.
+    # 2. Si no queda ninguna, suena la que hace más tiempo que no suena.
+    if not candidatas:
+        return la_que_hace_mas_que_no_suena(canciones, escuchas)
 
-    `que_comparar` es una función que, dada una canción, devuelve el dato
-    a comparar (su artista, su id, etc.). El filtro rechaza la canción si
-    ese dato ya apareció en las últimas N escuchas.
-    """
-    if ultimas < 1:
-        raise ValueError("ultimas tiene que ser al menos 1")
+    # 3. Gana la de mayor puntaje. Si empatan, la de id más chico
+    #    (por eso se usa -c.id: max prefiere el número más grande).
+    def valor(c: Cancion):
+        total = sum(p(c, escuchas) for p in puntajes)
+        return (total, -c.id)
 
-    def filtro(cancion: Cancion, escuchas: Escuchas) -> bool:
-        recientes = escuchas[-ultimas:]
-        for e in recientes:
-            if que_comparar(e.cancion) == que_comparar(cancion):
-                return False
-        return True
-    return filtro
-
-
-def variedad(ultimas: int) -> Filtro:
-    """No deja repetir un ARTISTA que sonó en las últimas N escuchas."""
-    return _sin_repetir(lambda c: c.artista, ultimas)
+    return max(candidatas, key=valor)
 
 
-def no_repetir_cancion(ultimas: int) -> Filtro:
-    """No deja repetir la misma CANCIÓN en las últimas N escuchas."""
-    return _sin_repetir(lambda c: c.id, ultimas)
+class Radio:
+    def __init__(self, catalogo: Catalogo, puntajes: list[Puntaje],
+                 filtros: list[Filtro], n_pausa: int, duracion_pausa: float = 60):
+        if n_pausa < 1:
+            raise ValueError("n_pausa tiene que ser al menos 1")
+        self.catalogo = catalogo
+        self.puntajes = tuple(puntajes)
+        self.filtros = tuple(filtros)
+        self.n_pausa = n_pausa
+        self.pausa = Pausa(duracion_pausa)
+
+    def elegir_siguiente(self, oyente: Oyente) -> Cancion:
+        """Une la radio con la función pura `elegir`."""
+        return elegir(self.catalogo.canciones, oyente.escuchas,
+                      self.puntajes, self.filtros)
+
+    def flujo(self, oyente: Oyente) -> Iterator[Emitible]:
+        """Entrega de a un elemento, para siempre. Cada n_pausa canciones, una Pausa.
+
+        Quien consume el flujo tiene que registrar cada escucha en el oyente
+        antes de pedir el siguiente elemento: así la radio aprende.
+        """
+        contador = 0
+        while True:
+            if contador == self.n_pausa:
+                yield self.pausa
+                contador = 0
+            else:
+                yield self.elegir_siguiente(oyente)
+                contador += 1
