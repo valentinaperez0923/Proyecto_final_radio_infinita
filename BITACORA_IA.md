@@ -14,7 +14,7 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Quién:** Delfina. **Herramienta:** Claude
 **Qué se pidió:** opciones de variantes y qué significaba "variante".
 **Qué devolvió:** una tabla con 6 combinaciones de variantes.
-**Qué decidimos nosotras:** rechazamos la recomendación que nos dió Claude y elegimos la opción de una radio para entrenar, que aprende de escuchas completas para recomendar nuevas canciones y hace una pausa cada N temas, porque era la más simple de implementar y probar, y nos deja margen para el cambio de requisito que se nos exige.
+**Qué decidimos nosotras:** rechazamos la recomendación que nos dio Claude y elegimos la opción de una radio para entrenar, que aprende de escuchas completas para recomendar nuevas canciones y hace una pausa cada N temas, porque era la más simple de implementar y probar, y nos deja margen para el cambio de requisito que se nos exige.
 
 ## 3. 27/10 – Primeras decisiones de diseño
 
@@ -77,3 +77,15 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Qué devolvió:** revisó nuestros archivos y encontró que faltaban `main.py` y `test_mas.py`, que varios archivos estaban en una versión vieja y que a `catalogo_datos.py` le faltaba la línea `from modelo import Cancion, Catalogo`.
 **Qué hicimos:** actualizamos todo y corrimos los tests.
 
+## 11. 11/11 - Simplificaciones
+
+**Quién:** Malena. **Herramienta:** Claude
+**Qué se pidió:** que unificara variedad y no_repetir_cancion con una función base, que renombrara la función pura a elegir, y la escribiera en pasos con comentarios y agregara los tipos que faltan.
+**Qué devolvió:** revisó nuestros archivos y modificó lo que le pedimos. También simplificó todo para que el código quedase sencillo.
+
+## 11. 12/11 - Correcciones
+
+**Quién:** Delfina. **Herramienta:** Claude
+**Qué se pidió:** que mejorara nuestro código.
+**Qué devolvió:** revisó los archivos y nos avisó que `radio.py` y `criterios.py` tenían los mismos contenidos y que `DISENO.md`.
+**Qué hicimos:** arreglamos los errores y actualizamos `DISENO.md`
