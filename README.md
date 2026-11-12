@@ -46,9 +46,26 @@ Las decisiones de diseño y las alternativas que descartamos están en `DISENO.m
 
 Hace falta Python 3 y `pytest` para los tests.
 
+### Instalar pytest
+
 ```
-python main.py
-pytest
+python -m pip install pytest
 ```
 
-`main.py` imprime los primeros 12 elementos del flujo (canciones y pausas) para un oyente simulado. El oyente simulado escucha completas las canciones de energía 7 o más, así que el resultado es siempre el mismo.
+### Correr el programa
+
+```
+python main.py
+```
+
+Imprime los primeros 12 elementos del flujo (canciones y pausas) para un oyente simulado. El oyente simulado escucha completas las canciones de energía 7 o más, así que el resultado es siempre el mismo.
+
+### Correr los tests
+
+```
+python -m pytest
+```
+
+Corre `test_radio.py` y `test_mas.py` juntos. Si todo anda bien, al final aparece `28 passed`. Con `-v` se ve cada test por nombre.
+
+Los tests no se corren con el botón de "Run Python File" de VS Code: ese botón solo carga el archivo y no ejecuta ningún test.

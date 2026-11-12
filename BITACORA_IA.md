@@ -83,7 +83,7 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Qué se pidió:** que unificara variedad y no_repetir_cancion con una función base, que renombrara la función pura a elegir, y la escribiera en pasos con comentarios y agregara los tipos que faltan.
 **Qué devolvió:** revisó nuestros archivos y modificó lo que le pedimos. También simplificó todo para que el código quedase sencillo.
 
-## 11. 12/11 - Correcciones
+## 12. 12/11 - Correcciones
 
 **Quién:** Delfina. **Herramienta:** Claude
 **Qué se pidió:** que mejorara nuestro código.
