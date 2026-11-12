@@ -4,7 +4,7 @@
 
 Variante elegida: **radio para entrenar**. La señal de aprendizaje son las escuchas completas del oyente y la regla de programación propia son las pausas cada N temas. Elegimos esta combinación porque permite separar con claridad el estado (el historial del oyente, que es lo único que cambia) de los criterios de elección (que solo leen ese estado), y porque la regla de pausas se puede implementar como una transformación del flujo sin modificar el criterio que elige las canciones. También era la más simple de implementar y probar.
 
-**Pausa:** se inserta una pausa cada N canciones (N es un parámetro de la emisora, así no se interrumpe la escucha del oyente, junto con la duración de la pausa).
+**Pausa:** se inserta una pausa cada N canciones. N y la duración de la pausa son parámetros de la emisora.
 
 **Escucha completa:** es el evento "terminó la canción entera". Es un dato binario por escucha: o la escuchó completa o no (la cortó o la saltó).
 
@@ -16,7 +16,7 @@ La pausa cada N canciones es una regla de programación de la emisora, no una pr
 
 ### Decisión 2: los criterios son funciones puras sobre las escuchas
 
-Un criterio recibe una canción y la tupla de escuchas (decidimos que las canciones del oyente se guardaran en tuplas en vez de listas, porque estos datos son inmutables) del oyente, y devuelve un resultado. No recuerda nada entre una llamada y otra, no modifica nada y no tiene efectos secundarios.
+Un criterio recibe una canción y la tupla de escuchas del oyente, y devuelve un resultado. El oyente entrega su historial como tupla porque un criterio solo lee y no puede modificarlo. No recuerda nada entre una llamada y otra, no modifica nada y no tiene efectos secundarios.
 
 Los criterios son de dos tipos:
 - **Puntajes:** `(Cancion, escuchas) -> float`. Más alto es mejor. Son `afinidad` y `energia_objetivo`.
@@ -25,6 +25,7 @@ Los criterios son de dos tipos:
 Los criterios que necesitan un valor de configuración (el objetivo de energía, o cuántas escuchas hacia atrás mira un filtro) se crean con una función que recibe ese valor y devuelve el criterio ya configurado (por ejemplo `energia_objetivo(8)` o `variedad(2)`). Así todos tienen la misma forma y se tratan igual. Agregar un criterio nuevo es escribir una función nueva, sin tocar las existentes.
 
 Para que los criterios sean puros, no reciben al `Oyente` sino solo su historial. 
+
 **Alternativa descartada: pasarle el `Oyente` completo al criterio.** Era más corto, pero el oyente es mutable y el resultado podía cambiar entre dos llamadas con los mismos argumentos, y para probar un criterio había que armar un oyente entero.
 
 ### Decisión 3: los criterios se combinan con filtros y puntajes
