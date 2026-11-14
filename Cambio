@@ -1,0 +1,24 @@
+Hola! Les pido dos cambios de diseño sobre lo que ya tienen.
+
+1) Que las pausas sean una transformación del flujo, como dice su README
+En el README escribieron que la regla de pausas "se puede implementar como una transformación del flujo, 
+sin modificar el criterio que elige las canciones". Pero hoy Radio.flujo mezcla las dos cosas: lleva el contador y las pausas dentro del mismo ciclo que elige las canciones. 
+Extraigan una función pura (por ejemplo con_pausas(elementos, n, pausa)) que reciba cualquier flujo y le intercale una pausa cada n elementos, y hagan que Radio.flujo sea la composición de un generador de canciones con con_pausas. 
+Con eso pueden testear la regla de pausas sin catálogo ni oyente (con_pausas(iter("abcdef"), 2, "P") tiene que dar a, b, P, c, d, P), 
+y una regla de flujo nueva se agrega envolviendo el flujo, sin tocar la elección de canciones. Los 28 tests tienen que seguir pasando y main.py tiene que imprimir lo mismo que antes.
+
+2) Que los puntajes se puedan balancear
+Hoy la radio suma afinidad y energia_objetivo con el mismo peso, pero no están en la misma escala: energia_objetivo va de 0 a 10, y afinidad cuenta escuchas completas sin tope. 
+Una radio para entrenar debería apuntar a la energía objetivo, y puede pasar lo contrario. 
+Ejemplo con su catálogo y objetivo 8: si el oyente escuchó completas 3 canciones de Río Lento, la radio elige una de energía 8; con 6 escuchas completas elige "Respira" (energía 3).
+En main.py no se nota porque el oyente simulado solo completa canciones de energía 7 o más. 
+Hagan que cada puntaje tenga un peso (por ejemplo, una función ponderado(peso, puntaje) que devuelva un puntaje nuevo, y/o que afinidad devuelva una fracción entre 0 y 1),
+y decidan y justifiquen en DISENO.md qué debe ganar cuando chocan. Agreguen un test con el ejemplo de arriba.
+
+Dos cosas para revisar, aparte de los cambios:
+- La radio solo aprende si quien consume el flujo registra cada escucha antes de pedir la siguiente (lo dice el docstring de flujo).
+Si se olvida, la radio repite la misma canción: sin registrar, el flujo da "Subida" cuatro veces seguidas. 
+Prepárense para explicar por qué lo dejaron así (separar lo puro de los efectos) y qué haría falta para que no se pueda olvidar.
+- El repo tiene archivos __pycache__ y .pyc subidos, y no hay .gitignore. Agréguenlo y saquen esos archivos del repo.
+
+Cualquier duda me escriben.
