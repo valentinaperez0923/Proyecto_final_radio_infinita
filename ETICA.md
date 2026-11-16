@@ -41,6 +41,6 @@ Si en el futuro se agregara popularidad (por ejemplo, un puntaje con las reprodu
 
 ## 4. Uso de IA
 
-Usamos Claude para elegir el proyecto, entender la variante, discutir decisiones de diseño, revisar el UML, escribir el código base y revisar el repositorio. Cada uso está en `BITACORA_IA.md`. Las decisiones de diseño las tomamos nosotras, y rechazamos o corregimos varias propuestas de la IA.
+Usamos Claude para elegir el proyecto, entender la variante, discutir decisiones de diseño, revisar el UML, escribir el código base, revisar el repositorio, comparar el repositorio con la letra del proyecto y escribir las predicciones de `PREDICCIONES.md`, que están firmadas como Claude (IA). Cada uso está en `BITACORA_IA.md`. Las decisiones de diseño las tomamos nosotras, y rechazamos o corregimos varias propuestas de la IA.
 
 Los errores de la IA tienen relación directa con la ética de la aplicación: el hueco de variedad (una canción cortada no contaba como sonada) y la burbuja de filtro salieron de un diseño en el que nos ayudó la IA, y los detectamos nosotras al correr el programa, no la IA.  
