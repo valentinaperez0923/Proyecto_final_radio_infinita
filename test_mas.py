@@ -3,8 +3,8 @@ from itertools import islice
 import pytest
 
 from modelo import Cancion, Catalogo, Oyente, Pausa
-from criterios import afinidad, energia_objetivo, variedad, no_repetir_cancion
-from radio import Radio
+from criterios import afinidad, energia_objetivo, variedad, no_repetir_cancion, ponderado
+from radio import Radio, con_pausas
 from catalogo_datos import CATALOGO
 
 A = Cancion(1, "Arranque", "Los Pesos", bpm=125, duracion=180)
@@ -122,6 +122,19 @@ def test_la_radio_aprende_de_las_escuchas_completas():
     oyente.registrar_escucha(Cancion(98, "Y", "Río Lento", 118, 100), completa=True)
     assert nueva_radio().elegir_siguiente(oyente).artista == "Nadia K"
 
+def _oyente_rio_lento(k):
+    oyente = Oyente("Ana")
+    rio = [c for c in CATALOGO.canciones if c.artista == "Río Lento"]
+    for i in range(k):
+        oyente.registrar_escucha(rio[i % 3], completa=True)
+    return oyente
+
+def test_mucha_afinidad_no_gana_a_la_energia_objetivo():
+    for k in (3, 6):
+        radio = Radio(CATALOGO,
+                      [ponderado(1.0, afinidad), energia_objetivo(8)],
+                      [], n_pausa=4)
+        assert radio.elegir_siguiente(_oyente_rio_lento(k)).energia == 8
 
 # --- Oyente ---
 
@@ -191,3 +204,6 @@ def test_con_no_repetir_la_radio_no_se_encierra_en_pocas_canciones():
     # 10 canciones en 12 elementos (hay 2 pausas), y ninguna se repite.
     assert len(canciones) == 10
     assert len(set(canciones)) == 10
+
+def test_con_pausas_intercala_una_pausa_cada_n():
+    assert list(con_pausas(iter("abcdef"), 2, "P")) == ["a", "b", "P", "c", "d", "P"]

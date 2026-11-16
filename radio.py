@@ -1,6 +1,6 @@
 """La radio: elige la próxima canción y arma el flujo infinito con pausas."""
 
-from typing import Iterator
+from typing import Iterator, Iterable, TypeVar 
 
 from modelo import Catalogo, Oyente, Cancion, Pausa, Emitible
 from criterios import Escuchas, Puntaje, Filtro
@@ -39,6 +39,19 @@ def elegir(canciones: tuple[Cancion, ...], escuchas: Escuchas,
 
     return max(candidatas, key=valor)
 
+T = TypeVar("T")
+
+def con_pausas(elementos: Iterable[T], n: int, pausa: T) -> Iterator[T]:
+    """Intercala `pausa` después de cada `n` elementos. No sabe de canciones."""
+    if n < 1:
+        raise ValueError("n tiene que ser al menos 1")
+    contador = 0
+    for elemento in elementos:
+        yield elemento
+        contador += 1
+        if contador == n:
+            yield pausa
+            contador = 0
 
 class Radio:
     def __init__(self, catalogo: Catalogo, puntajes: list[Puntaje],
@@ -56,17 +69,15 @@ class Radio:
         return elegir(self.catalogo.canciones, oyente.escuchas,
                       self.puntajes, self.filtros)
 
+    def canciones(self, oyente: Oyente) -> Iterator[Cancion]:
+        """Flujo infinito de canciones, sin pausas."""
+        while True:
+            yield self.elegir_siguiente(oyente)
+
     def flujo(self, oyente: Oyente) -> Iterator[Emitible]:
-        """Entrega de a un elemento, para siempre. Cada n_pausa canciones, una Pausa.
+        """Las canciones con una Pausa cada n_pausa canciones.
 
         Quien consume el flujo tiene que registrar cada escucha en el oyente
         antes de pedir el siguiente elemento: así la radio aprende.
         """
-        contador = 0
-        while True:
-            if contador == self.n_pausa:
-                yield self.pausa
-                contador = 0
-            else:
-                yield self.elegir_siguiente(oyente)
-                contador += 1
+        return con_pausas(self.canciones(oyente), self.n_pausa, self.pausa)

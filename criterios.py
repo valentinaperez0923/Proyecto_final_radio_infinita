@@ -20,13 +20,19 @@ Filtro = Callable[[Cancion, Escuchas], bool]
 # ---------- PUNTAJES ----------
 
 def afinidad(cancion: Cancion, escuchas: Escuchas) -> float:
-    """Cuántas veces se escuchó COMPLETA una canción de este artista."""
-    cantidad = 0
-    for e in escuchas:
-        if e.completa and e.cancion.artista == cancion.artista:
-            cantidad += 1
-    return float(cantidad)
+    """Fracción (0 a 1) de las escuchas COMPLETAS que fueron de este artista."""
+    completas = [e for e in escuchas if e.completa]
+    if not completas:
+        return 0.0
+    del_artista = [e for e in completas if e.cancion.artista == cancion.artista]
+    return len(del_artista) / len(completas)
 
+
+def ponderado(peso: float, puntaje: Puntaje) -> Puntaje:
+    """Crea un puntaje nuevo: el resultado de `puntaje` multiplicado por `peso`."""
+    def nuevo(cancion: Cancion, escuchas: Escuchas) -> float:
+        return peso * puntaje(cancion, escuchas)
+    return nuevo
 
 def energia_objetivo(objetivo: int) -> Puntaje:
     """Crea un puntaje: más puntos cuanto más cerca esté la energía del objetivo."""
