@@ -89,3 +89,12 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Qué se pidió:** que mejorara nuestro código.
 **Qué devolvió:** revisó los archivos y nos avisó que `radio.py` y `criterios.py` tenían los mismos contenidos y que `DISENO.md`.
 **Qué hicimos:** arreglamos los errores y actualizamos `DISENO.md`
+
+## 13. 16/11 – Cambios pedidos por la docente (archivo `Cambio`)
+
+**Quién:** (completar). **Herramienta:** Claude
+**Qué se pidió:** que aplicara los cambios del archivo `Cambio`: pausas como transformación del flujo y pesos para los puntajes.
+**Qué devolvió:** revisó lo que ya teníamos hecho (`con_pausas`, `ponderado`, `afinidad` como fracción, `.gitignore`) y comprobó que con solo el cambio de pausas `main.py` imprime exactamente lo mismo que antes.
+**Error encontrado:** el test de `con_pausas` comparaba todo el flujo de `"abcdef"` contra 6 elementos, pero el flujo sigue con `e, f, P`, así que fallaba. Se corrigió tomando los primeros 6 con `islice`.
+**Qué decidimos:** que gane la energía objetivo, con `ponderado(0.5, afinidad)` (justificado en `DISENO.md`, decisión 11). Con la afinidad como fracción, `main.py` cambia el orden de las canciones 8 a 12; es esperable, porque cambió cuánto pesa la afinidad.
+
