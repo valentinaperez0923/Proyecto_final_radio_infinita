@@ -130,11 +130,22 @@ def _oyente_rio_lento(k):
     return oyente
 
 def test_mucha_afinidad_no_gana_a_la_energia_objetivo():
+    # Ejemplo del cambio pedido: con objetivo 8, un oyente que escuchó completas
+    # 3 o 6 canciones de Río Lento. Antes, con 6 escuchas ganaba "Respira"
+    # (energía 3). Ahora la energía objetivo pesa más que la afinidad.
     for k in (3, 6):
         radio = Radio(CATALOGO,
-                      [ponderado(1.0, afinidad), energia_objetivo(8)],
+                      [ponderado(0.5, afinidad), energia_objetivo(8)],
                       [], n_pausa=4)
-        assert radio.elegir_siguiente(_oyente_rio_lento(k)).energia == 8
+        elegida = radio.elegir_siguiente(_oyente_rio_lento(k))
+        assert elegida.energia == 8
+        assert elegida.titulo != "Respira"
+
+
+def test_ponderado_multiplica_el_puntaje():
+    oyente = Oyente("Ana")
+    oyente.registrar_escucha(A, completa=True)
+    assert ponderado(0.5, afinidad)(A, oyente.escuchas) == 0.5
 
 # --- Oyente ---
 
@@ -206,4 +217,5 @@ def test_con_no_repetir_la_radio_no_se_encierra_en_pocas_canciones():
     assert len(set(canciones)) == 10
 
 def test_con_pausas_intercala_una_pausa_cada_n():
-    assert list(con_pausas(iter("abcdef"), 2, "P")) == ["a", "b", "P", "c", "d", "P"]
+    # No hace falta catálogo ni oyente: con_pausas sirve para cualquier flujo.
+    assert list(islice(con_pausas(iter("abcdef"), 2, "P"), 6)) == ["a", "b", "P", "c", "d", "P"]

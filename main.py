@@ -7,7 +7,7 @@ escucha). El resto del programa solo calcula.
 from itertools import islice
 
 from modelo import Cancion, Oyente
-from criterios import afinidad, energia_objetivo, variedad, no_repetir_cancion
+from criterios import afinidad, energia_objetivo, variedad, no_repetir_cancion, ponderado
 from radio import Radio
 from catalogo_datos import CATALOGO
 
@@ -35,7 +35,9 @@ def texto_pausa(numero: int, duracion: float) -> str:
 def main(cantidad: int = 12) -> None:
     radio = Radio(
         CATALOGO,
-        puntajes=[afinidad, energia_objetivo(8)],
+        # La energía objetivo (0 a 10) manda; la afinidad (0 a 1) con peso 0.5
+        # solo decide entre canciones igual de cerca del objetivo (DISENO.md, decisión 11).
+        puntajes=[ponderado(0.5, afinidad), energia_objetivo(8)],
         filtros=[variedad(2), no_repetir_cancion(10)],
         n_pausa=4,
         duracion_pausa=60,
