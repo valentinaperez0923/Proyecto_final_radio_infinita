@@ -36,8 +36,8 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 
 **Quién:** Olivia. **Herramienta:** Claude
 **Qué se pidió:** revisar lo que teníamos (DISENO, README, UML) y qué seguía.
-**Qué devolvió:** encontró cuatro problemas: el README contradecía al DISENO (decía oyente inmutable y criterios puros); el UML no coincidía con las decisiones (faltaba la Pausa, una interfaz y la relación de la Radio con el Catálogo); el catálogo se podía modificar; y un hueco en la variedad.
-**Error real de la IA:** el hueco de la variedad venía de un diseño en el que nos ayudó la IA. El oyente solo guardaba las escuchas completas, así que si alguien cortaba una canción, la radio no se enteraba de que había sonado y podía volver a ponerla enseguida. No lo marcó cuando armamos esa parte.
+**Qué devolvió:** encontró tres problemas: el README contradecía al DISENO (decía oyente inmutable y criterios puros); el UML no coincidía con las decisiones (faltaba la Pausa, una interfaz y la relación de la Radio con el Catálogo); el catálogo se podía modificar.
+**Error real de la IA:** había un hueco de variedad, que venía de un diseño en el que nos ayudó la IA, de este error nos percatamos nosotras. El oyente solo guardaba las escuchas completas, así que si alguien cortaba una canción, la radio no se enteraba de que había sonado y podía volver a ponerla enseguida. No lo marcó cuando armamos esa parte.
 **Qué decidimos nosotras:** el catálogo es fijo y el mismo para todos los oyentes. El oyente pasa a guardar todas las escuchas, marcando si fue completa o no.
 
 ## 6. 5/11 – Primer código
@@ -52,7 +52,7 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Quién:** Olivia. **Herramienta:** Claude
 **Qué se pidió:** el catálogo de canciones y qué faltaba del código.
 **Qué devolvió:** `catalogo_datos.py` (18 canciones inventadas), `main.py` y `test_mas.py`.
-**Error real de la IA:** al correr `main.py`, la radio repetía siempre las mismas 3 canciones. El filtro de variedad no dejaba repetir el artista, pero sí la misma canción, y la afinidad premiaba cada vez más lo ya escuchado. Es un ejemplo real de burbuja de filtro.
+**Error real de la IA:** al correr `main.py`, la radio repetía siempre las mismas 3 canciones. El filtro de variedad no dejaba repetir el artista, pero sí la misma canción, y la afinidad premiaba cada vez más lo ya escuchado. Acá se nota un ejemplo real de burbuja de filtro, de la cual nos percatamos y corregimos.
 **Qué se corrigió:** se agregó el filtro `no_repetir_cancion`.
 
 ## 8. 5/11 – La energía depende de los bpm
@@ -87,7 +87,7 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 
 **Quién:** Delfina. **Herramienta:** Claude
 **Qué se pidió:** que mejorara nuestro código.
-**Qué devolvió:** revisó los archivos y nos avisó que `radio.py` y `criterios.py` tenían los mismos contenidos y que `DISENO.md`.
+**Qué devolvió:** revisó los archivos y nos avisó que `radio.py` y `criterios.py` tenían los mismos contenidos que `DISENO.md`.
 **Qué hicimos:** arreglamos los errores y actualizamos `DISENO.md`
 
 ## 13. 16/11 – Cambios pedidos por la docente (archivo `Cambio`)
@@ -102,8 +102,8 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 
 **Quién:** Malena. **Herramienta:** Claude
 **Qué se pidió:** comparar el repositorio con la letra del proyecto y escribir lo que faltaba de documentación.
-**Qué devolvió:** encontró que faltaban el UML final, la tabla de funciones puras, el sesgo hacia lo más popular en `ETICA.md`, varias preguntas de diseño sin responder en `DISENO.md` (clase o función, composición o herencia, evaluación perezosa) y que `PREDICCIONES.md` estaba vacío. Escribió `UML.md`, `FUNCIONES_PURAS.md`, las decisiones 12 a 14, la sección de cambio de requisito y la parte de popularidad de `ETICA.md`, y armó una plantilla para `PREDICCIONES.md` sin completar las predicciones.
-**Qué revisamos o corregimos:** (completar)
+**Qué devolvió:** encontró que faltaban el UML final, la tabla de funciones puras, el sesgo hacia lo más popular en `ETICA.md`, varias preguntas de diseño sin responder en `DISENO.md` (clase o función, composición o herencia, evaluación perezosa) y que `PREDICCIONES.md` estaba vacío. 
+**Qué revisamos o corregimos:** hicimos el UML final, agregamos la tabla de funciones puras y no puras (con la explicación de cada una), anotamos el sesgo hacia lo más popular en `ETICA.md`, respondimos las preguntas sobre diseño que faltaban, y completamos las predicciones antes de correr el programa.
 
 ## 15. 16/11 – Predicciones
 
