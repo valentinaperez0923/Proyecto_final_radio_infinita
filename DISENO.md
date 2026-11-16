@@ -32,6 +32,8 @@ Los criterios son de dos tipos:
 
 Los criterios que necesitan un valor de configuración (el objetivo de energía, o cuántas escuchas hacia atrás mira un filtro) se crean con una función que recibe ese valor y devuelve el criterio ya configurado (por ejemplo `energia_objetivo(8)` o `variedad(2)`). Así todos tienen la misma forma y se tratan igual. Agregar un criterio nuevo es escribir una función nueva, sin tocar las existentes.
 
+Para darle peso a un puntaje, `ponderado(peso, puntaje)` devuelve un puntaje nuevo que multiplica el resultado del original por `peso` (ver decisión 11). El puntaje original no se modifica.
+
 Para que los criterios sean puros, no reciben al `Oyente` sino solo su historial. 
 
 **Alternativa descartada: pasarle el `Oyente` completo al criterio.** Era más corto, pero el oyente es mutable y el resultado podía cambiar entre dos llamadas con los mismos argumentos, y para probar un criterio había que armar un oyente entero.
@@ -98,7 +100,7 @@ El costo es que el oyente se "olvida" de lo que escuchó hace mucho: una canció
 
 ### Decisión 11: los puntajes tienen peso, y la energía objetivo gana
 
-**Problema.** La radio sumaba los puntajes con el mismo peso, pero no estaban en la misma escala: `energia_objetivo` va de 0 a 10 y `afinidad` contaba escuchas completas sin tope. Cuanto más escuchaba el oyente a un artista, más pesaba la afinidad, hasta tapar a la energía. Con objetivo 8 y un oyente que escuchó completas 6 canciones de Río Lento, la radio elegía "Respira" (energía 3), que no sirve para entrenar.
+**Problema.** La radio sumaba los puntajes con el mismo peso, pero no estaban en la misma escala: `energia_objetivo` da hasta 10 puntos y `afinidad` contaba escuchas completas sin tope. Cuanto más escuchaba el oyente a un artista, más pesaba la afinidad, hasta tapar a la energía. Con objetivo 8 y un oyente que escuchó completas 6 canciones de Río Lento, la radio elegía "Respira" (energía 3), que no sirve para entrenar.
 
 **Cambios.**
 1. `afinidad` devuelve una **fracción entre 0 y 1**: la parte de las escuchas completas que fueron de ese artista. Así no crece sin tope con el uso.
@@ -106,7 +108,7 @@ El costo es que el oyente se "olvida" de lo que escuchó hace mucho: una canció
 
 **Qué gana cuando chocan: la energía objetivo.** Es una radio para entrenar: si la música no tiene la energía que pide el entrenamiento, no cumple su función, por más que sea de un artista que le gusta al oyente. Por eso usamos `ponderado(0.5, afinidad)` junto con `energia_objetivo(objetivo)` sin modificar.
 
-Con ese peso la afinidad suma como máximo 0.5, y la energía de dos canciones que están a distinta distancia del objetivo difiere en al menos 1 punto. Entonces una canción más cerca del objetivo siempre le gana a una más lejos, y la afinidad decide **entre canciones igual de cerca** del objetivo (por ejemplo, entre dos de energía 8, suena la del artista que el oyente escucha completo más seguido). La señal de aprendizaje sigue funcionando, pero dentro de lo que sirve para entrenar.
+Con ese peso la afinidad suma como máximo 0.5, y el puntaje de energía de dos canciones que están a distinta distancia del objetivo difiere en al menos 1 punto. Entonces una canción más cerca del objetivo siempre le gana a una más lejos, y la afinidad decide **entre canciones igual de cerca** del objetivo (por ejemplo, entre dos de energía 8, suena la del artista que el oyente escucha completo más seguido). La señal de aprendizaje sigue funcionando, pero dentro de lo que sirve para entrenar.
 
 **Por qué 0.5 y no 1.** Con peso 1 la afinidad puede valer lo mismo que un punto de energía: una canción de energía 7 de un artista que el oyente escucha siempre empataría con una de energía 8 de un artista nuevo, y el empate lo resolvería el id, que es arbitrario. Con un peso menor que 1 ese empate no puede pasar.
 

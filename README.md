@@ -21,7 +21,7 @@ Elegimos esta combinación porque permite separar con claridad el estado (el his
 ## Cómo funciona
 
 1. La `Radio` aplica los **filtros** (variedad de artistas, no repetir canciones) al catálogo.
-2. Con las canciones que quedan, suma los **puntajes**, cada uno con su peso: la cercanía a la energía objetivo (0 a 10) y la afinidad con los artistas que el oyente escuchó completos (0 a 1, con peso 0.5). La energía objetivo es la que manda; la afinidad decide entre canciones igual de cerca del objetivo.
+2. Con las canciones que quedan, suma los **puntajes**, cada uno con su peso: la cercanía a la energía objetivo (hasta 10) y la afinidad con los artistas que el oyente escuchó completos (0 a 1, con peso 0.5). La energía objetivo es la que manda; la afinidad decide entre canciones igual de cerca del objetivo.
 3. Elige la de mayor puntaje. Si hay empate, gana la canción con el id más chico, así que con los mismos datos el flujo es siempre el mismo.
 4. Cada N canciones inserta una `Pausa`. Esto lo hace `con_pausas`, una función aparte que envuelve el flujo de canciones sin tocar cómo se eligen.
 5. Quien consume el flujo (`main.py`) registra cómo terminó cada escucha en el `Oyente`, y la radio aprende de eso.
@@ -33,8 +33,8 @@ Las decisiones de diseño y las alternativas que descartamos están en `DISENO.m
 | Archivo | Qué contiene |
 |---|---|
 | `modelo.py` | Datos: `Cancion`, `Pausa`, `Escucha`, `Catalogo`, `Oyente` |
-| `criterios.py` | Criterios de elección (funciones puras): puntajes y filtros |
-| `radio.py` | La `Radio` y su flujo infinito |
+| `criterios.py` | Criterios de elección (funciones puras): puntajes, filtros y `ponderado` para darle peso a un puntaje |
+| `radio.py` | La `Radio`, su flujo infinito y `con_pausas`, que intercala las pausas en el flujo |
 | `catalogo_datos.py` | El catálogo de 18 canciones inventadas |
 | `main.py` | Programa principal: arma la radio y simula a un oyente, es donde se da "correr" al programa |
 | `test_radio.py`, `test_mas.py` | Tests de prueba |
