@@ -103,7 +103,7 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Quién:** Malena. **Herramienta:** Claude
 **Qué se pidió:** comparar el repositorio con la letra del proyecto y escribir lo que faltaba de documentación.
 **Qué devolvió:** encontró que faltaban el UML final, la tabla de funciones puras, el sesgo hacia lo más popular en `ETICA.md`, varias preguntas de diseño sin responder en `DISENO.md` (clase o función, composición o herencia, evaluación perezosa) y que `PREDICCIONES.md` estaba vacío. 
-**Qué revisamos o corregimos:** hicimos el UML final, agregamos la tabla de funciones puras y no puras (con la explicación de cada una), anotamos el sesgo hacia lo más popular en `ETICA.md`, respondimos las preguntas sobre diseño que faltaban, y completamos las predicciones antes de correr el programa.
+**Qué revisamos o corregimos:** hicimos el UML final, agregamos la tabla de funciones puras y no puras (con la explicación de cada una), anotamos el sesgo hacia lo más popular en `ETICA.md`, respondimos las preguntas sobre diseño que faltaban.
 
 ## 15. 16/11 – Predicciones
 
