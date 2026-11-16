@@ -161,7 +161,7 @@ Lo comprueban `test_el_flujo_no_se_corta` (se pueden pedir 500 elementos) y `tes
 
 ## Cambio de requisito y refactor
 
-La docente pidió dos cambios (están en el archivo `Cambio`).
+El docente pidió dos cambios (están en el archivo `Cambio`).
 
 **1. Las pausas como transformación del flujo.**
 - **Antes:** `Radio.flujo` era un solo ciclo que elegía la canción, llevaba el contador y metía la pausa.
