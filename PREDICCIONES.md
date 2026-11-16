@@ -4,6 +4,7 @@ Antes de correr una función clave anotamos qué esperamos que devuelva. Despué
 
 **Importante:** la predicción se escribe *antes* de correr el código.
 
+
 Para correr cada ejemplo: abrir una terminal en la carpeta del proyecto, escribir `python`, y pegar el código.
 
 ## 1. `afinidad` con escuchas completas y cortadas
@@ -21,9 +22,9 @@ o.registrar_escucha(a, completa=True)
 print(afinidad(a, o.escuchas))
 ```
 
-- **Predicción (quién, fecha):**
-- **Resultado:**
-- **¿Coincidió? ¿Por qué?:**
+- **Predicción:** , 16/11. Solo cuentan las escuchas completas: son 3 (A, B, A) y 2 son de Los Pesos, así que `afinidad` da 2/3: se imprime `0.6666666666666666`. La escucha cortada de A no cuenta.
+- **Resultado:** `0.6666666666666666`
+- **¿Coincidió? ¿Por qué?:** Sí. Confirma la decisión 7: la escucha cortada queda en el historial (cuenta para los filtros), pero no suma afinidad.
 
 ## 2. `Cancion.energia` en los bordes
 
@@ -34,9 +35,9 @@ for bpm in (65, 69, 70, 165, 250):
 Cancion(1, "X", "Y", bpm=30, duracion=100)
 ```
 
-- **Predicción (quién, fecha):**
-- **Resultado:**
-- **¿Coincidió? ¿Por qué?:**
+- **Predicción:** , 16/11. Con la fórmula `min(10, max(1, (bpm - 60) // 10))`: 65 → 1, 69 → 1, 70 → 1, 165 → 10, 250 → 10. La última línea da `ValueError`, porque los bpm tienen que estar entre 40 y 250.
+- **Resultado:** `65 1`, `69 1`, `70 1`, `165 10`, `250 10` y después `ValueError: Los bpm tienen que estar entre 40 y 250`.
+- **¿Coincidió? ¿Por qué?:** Sí. Se ve el efecto de los topes: cualquier canción de menos de 80 bpm queda con energía 1, y cualquiera de 160 o más queda con 10. Una canción de 30 bpm no se puede crear, porque `Cancion` valida sus datos al crearse.
 
 ## 3. `la_que_hace_mas_que_no_suena`
 
@@ -51,9 +52,9 @@ for i in (2, 1, 3, 1):
 print(la_que_hace_mas_que_no_suena(tres, o.escuchas).titulo)
 ```
 
-- **Predicción (quién, fecha):**
-- **Resultado:**
-- **¿Coincidió? ¿Por qué?:**
+- **Predicción:** , 16/11. Las escuchas quedan en las posiciones 2 → 0, 1 → 1 y 3, 3 → 2. Gana la de posición más chica, la id 2, así que se imprime `Sprint`.
+- **Resultado:** `Sprint`
+- **¿Coincidió? ¿Por qué?:** Sí. La id 1 sonó dos veces, pero lo que cuenta es la última vez que sonó, no cuántas veces.
 
 ## 4. `con_pausas` con un flujo que sí termina
 
@@ -62,9 +63,9 @@ from radio import con_pausas
 print(list(con_pausas(range(7), 3, "P")))
 ```
 
-- **Predicción (quién, fecha):**
-- **Resultado:**
-- **¿Coincidió? ¿Por qué?:**
+- **Predicción:** , 16/11. `[0, 1, 2, 'P', 3, 4, 5, 'P', 6]`. Después del 6 no hay pausa, porque `range(7)` termina antes de juntar otros 3 elementos.
+- **Resultado:** `[0, 1, 2, 'P', 3, 4, 5, 'P', 6]`
+- **¿Coincidió? ¿Por qué?:** Sí. `con_pausas` funciona con cualquier flujo, también con uno que termina, y pone la pausa solo cuando se juntaron `n` elementos.
 
 ## 5. `elegir` con otra energía objetivo
 
@@ -77,6 +78,6 @@ radio = Radio(CATALOGO, [ponderado(0.5, afinidad), energia_objetivo(4)], [], n_p
 print(radio.elegir_siguiente(Oyente("Prueba")).titulo)
 ```
 
-- **Predicción (quién, fecha):**
-- **Resultado:**
-- **¿Coincidió? ¿Por qué?:**
+- **Predicción:**, 16/11. Sin historial la afinidad vale 0 para todas, así que gana la canción con energía más cerca de 4. La única de energía 4 es Bajada (100 bpm → 4), así que se imprime `Bajada`.
+- **Resultado:** `Bajada`
+- **¿Coincidió? ¿Por qué?:** Sí. Sin historial la afinidad no influye y decide la energía objetivo, como dice la decisión 11.

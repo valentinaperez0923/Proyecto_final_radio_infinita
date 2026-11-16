@@ -92,7 +92,7 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 
 ## 13. 16/11 – Cambios pedidos por la docente (archivo `Cambio`)
 
-**Quién:** (completar). **Herramienta:** Claude
+**Quién:** Malena. **Herramienta:** Claude
 **Qué se pidió:** que aplicara los cambios del archivo `Cambio`: pausas como transformación del flujo y pesos para los puntajes.
 **Qué devolvió:** revisó lo que ya teníamos hecho (`con_pausas`, `ponderado`, `afinidad` como fracción, `.gitignore`) y comprobó que con solo el cambio de pausas `main.py` imprime exactamente lo mismo que antes.
 **Error encontrado:** el test de `con_pausas` comparaba todo el flujo de `"abcdef"` contra 6 elementos, pero el flujo sigue con `e, f, P`, así que fallaba. Se corrigió tomando los primeros 6 con `islice`.
@@ -100,8 +100,14 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 
 ## 14. 16/11 – Revisión contra la letra del proyecto
 
-**Quién:** (completar). **Herramienta:** Claude
+**Quién:** Malena. **Herramienta:** Claude
 **Qué se pidió:** comparar el repositorio con la letra del proyecto y escribir lo que faltaba de documentación.
 **Qué devolvió:** encontró que faltaban el UML final, la tabla de funciones puras, el sesgo hacia lo más popular en `ETICA.md`, varias preguntas de diseño sin responder en `DISENO.md` (clase o función, composición o herencia, evaluación perezosa) y que `PREDICCIONES.md` estaba vacío. Escribió `UML.md`, `FUNCIONES_PURAS.md`, las decisiones 12 a 14, la sección de cambio de requisito y la parte de popularidad de `ETICA.md`, y armó una plantilla para `PREDICCIONES.md` sin completar las predicciones.
 **Qué revisamos o corregimos:** (completar)
+
+## 15. 16/11 – Predicciones
+
+**Quién:** Malena. **Herramienta:** Claude
+**Qué se pidió:** que escribiera las predicciones de `PREDICCIONES.md`.
+**Qué devolvió:** predijo los 5 casos leyendo el código, sin correrlo, y después los corrió y comparó. Las 5 predicciones coincidieron con el resultado. Las predicciones están firmadas como Claude (IA) en el archivo.
 
