@@ -98,3 +98,10 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Error encontrado:** el test de `con_pausas` comparaba todo el flujo de `"abcdef"` contra 6 elementos, pero el flujo sigue con `e, f, P`, así que fallaba. Se corrigió tomando los primeros 6 con `islice`.
 **Qué decidimos:** que gane la energía objetivo, con `ponderado(0.5, afinidad)` (justificado en `DISENO.md`, decisión 11). Con la afinidad como fracción, `main.py` cambia el orden de las canciones 8 a 12; es esperable, porque cambió cuánto pesa la afinidad.
 
+## 14. 16/11 – Revisión contra la letra del proyecto
+
+**Quién:** (completar). **Herramienta:** Claude
+**Qué se pidió:** comparar el repositorio con la letra del proyecto y escribir lo que faltaba de documentación.
+**Qué devolvió:** encontró que faltaban el UML final, la tabla de funciones puras, el sesgo hacia lo más popular en `ETICA.md`, varias preguntas de diseño sin responder en `DISENO.md` (clase o función, composición o herencia, evaluación perezosa) y que `PREDICCIONES.md` estaba vacío. Escribió `UML.md`, `FUNCIONES_PURAS.md`, las decisiones 12 a 14, la sección de cambio de requisito y la parte de popularidad de `ETICA.md`, y armó una plantilla para `PREDICCIONES.md` sin completar las predicciones.
+**Qué revisamos o corregimos:** (completar)
+

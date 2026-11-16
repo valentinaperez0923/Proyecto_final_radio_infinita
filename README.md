@@ -38,7 +38,12 @@ Las decisiones de diseño y las alternativas que descartamos están en `DISENO.m
 | `catalogo_datos.py` | El catálogo de 18 canciones inventadas |
 | `main.py` | Programa principal: arma la radio y simula a un oyente, es donde se da "correr" al programa |
 | `test_radio.py`, `test_mas.py` | Tests de prueba |
-| `DISENO.md` | Decisiones de diseño |
+| `DISENO.md` | Decisiones de diseño, cambio de requisito y refactor |
+| `UML.md` | UML final y qué cambió respecto del inicial |
+| `UML inicial.png` | UML del hito 1 |
+| `FUNCIONES_PURAS.md` | Tabla de funciones del núcleo: si son puras y por qué |
+| `PREDICCIONES.md` | Qué esperábamos que devolvieran funciones clave y qué pasó |
+| `Cambio` | Cambio de requisito pedido por la docente |
 | `ETICA.md` | Riesgos éticos y marco legal |
 | `BITACORA_IA.md` | Registro del uso de IA |
 

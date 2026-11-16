@@ -115,3 +115,75 @@ Con ese peso la afinidad suma como máximo 0.5, y el puntaje de energía de dos 
 **Alternativa descartada: que gane la afinidad (peso alto, por ejemplo 5 o más).** Tendría sentido en una radio para escuchar música tranquila o descubrir artistas parecidos, pero en esta variante haría que el oyente que escucha mucho a un artista lento reciba música lenta para entrenar.
 
 El test `test_mucha_afinidad_no_gana_a_la_energia_objetivo` usa el ejemplo de arriba (3 y 6 escuchas completas de Río Lento, objetivo 8) y comprueba que en los dos casos suene una canción de energía 8.
+
+### Decisión 12: los criterios son funciones, no clases
+
+Cada criterio hace una sola cosa: recibe una canción y las escuchas, y devuelve un número (puntaje) o un booleano (filtro). Por eso lo escribimos como una función y no como una clase con un único método.
+
+En Python una función también es un objeto: se puede guardar en una lista, pasar como argumento y devolver desde otra función. La `Radio` recibe `puntajes` y `filtros` como listas de funciones y las llama a todas de la misma manera, sin saber cuál es cuál. Es polimorfismo sin herencia: alcanza con que todas tengan la misma forma (`Puntaje` o `Filtro`, definidos en `criterios.py`).
+
+Los criterios que necesitan configuración usan **funciones de orden superior**, es decir, funciones que reciben o devuelven otras funciones:
+- `energia_objetivo(8)`, `variedad(2)` y `no_repetir_cancion(10)` reciben un valor y devuelven el criterio ya configurado. El valor queda guardado dentro de la función devuelta (una *clausura*), que cumple el papel que en una clase cumpliría un atributo.
+- `_sin_repetir(que_comparar, ultimas)` recibe una función (qué dato de la canción comparar) y con eso arma los dos filtros sin repetir código.
+- `ponderado(peso, puntaje)` recibe un puntaje y devuelve otro.
+- `elegir` usa `max` y `min` con `key=`, que también reciben una función.
+
+**Qué cambiaría si fueran clases.** Una clase `Criterio` con un método `puntuar` y subclases (`Afinidad`, `EnergiaObjetivo`, ...) guardaría la configuración en atributos y permitiría heredar comportamiento. A cambio, cada criterio nuevo sería una clase con `__init__` y un método, la `Radio` dependería de esa jerarquía, y un criterio podría guardar estado entre llamadas y dejar de ser puro sin que se note. Con funciones, combinar criterios (como hace `ponderado`) es envolver una función en otra.
+
+**Alternativa descartada: clase abstracta `Criterio` con subclases.** Tendría sentido si un criterio necesitara más de un método (por ejemplo, `puntuar` y `explicar` por qué eligió una canción) o guardar estado propio. No es nuestro caso.
+
+### Decisión 13: composición en lugar de herencia, y una interfaz para lo que sale al aire
+
+En el proyecto no hay herencia entre nuestras clases. Las piezas se arman **por composición**:
+- La `Radio` *tiene* un `Catalogo`, una tupla de puntajes, una tupla de filtros y una `Pausa`. Cambiar cómo elige es pasarle otros criterios, no escribir una subclase.
+- El `Oyente` *tiene* su historial de `Escucha`, y cada `Escucha` *tiene* una `Cancion`.
+- `Radio.flujo` compone el generador de canciones con `con_pausas` (decisión 1).
+
+Por la radio pueden salir canciones y pausas, así que el flujo es de tipo `Iterator[Emitible]`. `Emitible` es un `Protocol` (en `modelo.py`): una interfaz que pide tener `duracion`. `Cancion` y `Pausa` la cumplen sin heredar de ella, solo por tener ese atributo (tipado estructural). El único lugar donde distinguimos el tipo es `main.py`, que muestra distinto una canción y una pausa.
+
+**Alternativa descartada: que `Pausa` herede de `Cancion`.** Una pausa sería una "canción sin artista": tendría que tener id, bpm y artista inventados, rompería las validaciones de `Cancion`, y los filtros y puntajes la tratarían como una canción más.
+
+**Alternativa descartada: una subclase `RadioConPausas(Radio)`.** Cada regla de flujo nueva (pausas, bloques temáticos, intensidad creciente) sería otra subclase, y combinar dos reglas obligaría a herencia múltiple. Con `con_pausas` cada regla es una función que envuelve el flujo, y se pueden encadenar.
+
+**Alternativa descartada: una clase base abstracta (`ABC`) en lugar de `Protocol`.** También funcionaría, pero obliga a que `Cancion` y `Pausa` hereden de ella. Con `Protocol` alcanza con cumplir la interfaz.
+
+### Decisión 14: el flujo infinito es perezoso
+
+La radio no tiene una lista de reproducción. `Radio.canciones` es un generador con `while True` que elige una canción recién cuando se le pide la siguiente (con `next()` o en un `for`). `con_pausas` también es un generador, así que el flujo completo se calcula de a un elemento por vez. Quien lo consume decide cuánto pedir: `main.py` usa `itertools.islice` para cortarlo en 12 elementos.
+
+Así se representa algo que nunca termina sin quedarse sin memoria: el flujo no se guarda en ningún lado, y lo único que crece con el uso es el historial del oyente, que tiene tope (decisión 10).
+
+Además, la evaluación perezosa es necesaria para que la radio aprenda: la canción siguiente depende de cómo terminó la anterior, y eso se sabe recién cuando el consumidor la registra (decisión 5).
+
+Lo comprueban `test_el_flujo_no_se_corta` (se pueden pedir 500 elementos) y `test_el_flujo_es_perezoso`.
+
+**Alternativa descartada: calcular de antemano una lista de N canciones.** Un flujo infinito no se puede calcular entero, y una lista armada por adelantado no podría tener en cuenta escuchas que todavía no ocurrieron.
+
+## Cambio de requisito y refactor
+
+La docente pidió dos cambios (están en el archivo `Cambio`).
+
+**1. Las pausas como transformación del flujo.**
+- **Antes:** `Radio.flujo` era un solo ciclo que elegía la canción, llevaba el contador y metía la pausa.
+- **Después:** `con_pausas(elementos, n, pausa)` es una función aparte que no sabe de canciones, y `Radio.flujo` es `con_pausas(self.canciones(oyente), self.n_pausa, self.pausa)` (decisión 1).
+- **Cómo comprobamos que no se rompió nada:** los 28 tests que había siguen pasando, y con solo este cambio `main.py` imprime exactamente lo mismo que antes.
+- **Test nuevo:** `test_con_pausas_intercala_una_pausa_cada_n`, que prueba la regla sin catálogo ni oyente.
+
+**2. Pesos en los puntajes.**
+- **Antes:** `afinidad` contaba escuchas completas sin tope y se sumaba con el mismo peso que `energia_objetivo`. Con 6 escuchas completas de Río Lento y objetivo 8 ganaba "Respira" (energía 3).
+- **Después:** `afinidad` es una fracción entre 0 y 1, `ponderado(peso, puntaje)` permite darle peso a cualquier puntaje, y la radio usa `ponderado(0.5, afinidad)`: gana la energía objetivo (decisión 11).
+- **Tests nuevos:** `test_mucha_afinidad_no_gana_a_la_energia_objetivo` (el ejemplo de Río Lento, con 3 y 6 escuchas) y `test_ponderado_multiplica_el_puntaje`.
+- **Efecto en `main.py`:** cambia el orden de las canciones 8 a 12. Es esperable, porque cambió cuánto pesa la afinidad.
+
+**Qué hizo fácil el cambio.** Ninguno de los dos obligó a modificar los criterios existentes ni la función `elegir`: las pausas se agregaron envolviendo el flujo, y los pesos envolviendo un puntaje. Es la ventaja de tener los criterios como funciones independientes (decisiones 2 y 12) y el flujo como composición de generadores (decisiones 1 y 14).
+
+**Además:** se agregó un `.gitignore` y se sacaron del repositorio los archivos `__pycache__` y `.pyc`. El riesgo de que el consumidor se olvide de registrar las escuchas está explicado en la decisión 5.
+
+## Dónde usamos objetos y dónde funciones puras
+
+- **Objetos** para lo que existe en el mundo de la radio y tiene reglas que cuidar. `Cancion`, `Pausa`, `Escucha` y `Catalogo` son inmutables (`frozen=True`) y validan sus datos al crearse (invariantes: bpm entre 40 y 250, duración mayor que 0, catálogo no vacío y sin ids repetidos). El `Oyente` es el único objeto que cambia y encapsula su historial: solo se modifica con `registrar_escucha` y se lee como tupla. La `Radio` guarda la configuración de la emisora.
+- **Funciones puras** para todo lo que calcula: los criterios, `elegir`, `la_que_hace_mas_que_no_suena`, `con_pausas` y los textos de `main.py`.
+- **Efectos** (mostrar en pantalla, decidir cómo terminó cada escucha, modificar el historial) solo en `main.py` y en `Oyente.registrar_escucha`.
+
+La tabla con cada función del núcleo, si es pura y, si no lo es, por qué está ahí, está en `FUNCIONES_PURAS.md`. El UML final y lo que cambió respecto del inicial están en `UML.md`.
+

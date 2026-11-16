@@ -15,6 +15,15 @@
 
 **Límite que queda.** La radio es "para entrenar" y apunta a energía 8, y `energia` se calcula a partir de los bpm. Los artistas de ritmo lento puntúan menos por una decisión de diseño. Además, el oyente simulado solo escucha completas las canciones de energía 7 o más, así que esas canciones nunca ganan afinidad. Es una consecuencia del tipo de emisora, pero deja en desventaja a ciertos artistas.
 
+**Sesgo hacia lo más popular.** En muchas radios digitales, lo que ya se escucha mucho se recomienda más, y los artistas menos conocidos casi no aparecen. Nuestra radio no usa ningún dato de popularidad: no hay un conteo global de reproducciones y no se mezclan los historiales de distintos oyentes (cada `Oyente` tiene el suyo, y el test `test_dos_oyentes_no_se_mezclan` lo comprueba). La afinidad depende solo de lo que escuchó esa persona.
+
+Igual quedan sesgos parecidos, que conviene reconocer:
+- **Dentro de cada oyente, lo ya escuchado gana puntos**, que es la misma lógica de la burbuja de filtro. Lo limitan el filtro de variedad, que obliga a rotar artistas, y el peso de la afinidad: desde el cambio de requisito es una fracción entre 0 y 1 con peso 0.5, así que no crece sin tope y no puede tapar a la energía objetivo.
+- **El desempate por id favorece siempre a las mismas canciones** (las de id más chico). En nuestro catálogo inventado no tiene consecuencias, pero en una radio real, si los ids se asignaran por orden de llegada al catálogo, favorecería a los artistas que están desde hace más tiempo.
+- **La cantidad de canciones por artista.** En nuestro catálogo cada artista tiene 3 canciones. En un catálogo real, un artista con muchas canciones tendría más oportunidades de sonar y de acumular afinidad.
+
+Si en el futuro se agregara popularidad (por ejemplo, un puntaje con las reproducciones de todos los oyentes), lo haríamos como un puntaje más, con `ponderado` y un peso bajo, nunca como filtro, y mantendríamos el filtro de variedad para que los artistas menos escuchados sigan teniendo lugar.
+
 ## 3. Marco legal
 
 **Ley 18.331 (protección de datos personales).** Si la radio tuviera oyentes reales, serían relevantes los siguientes artículos:
