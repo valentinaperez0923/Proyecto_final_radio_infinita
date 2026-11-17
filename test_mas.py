@@ -129,6 +129,7 @@ def _oyente_rio_lento(k):
         oyente.registrar_escucha(rio[i % 3], completa=True)
     return oyente
 
+# cambio 2 solicitado por el profesor: testear que la afinidad no gane a la energía objetivo
 def test_mucha_afinidad_no_gana_a_la_energia_objetivo():
     # Ejemplo del cambio pedido: con objetivo 8, un oyente que escuchó completas
     # 3 o 6 canciones de Río Lento. Antes, con 6 escuchas ganaba "Respira"
@@ -141,7 +142,7 @@ def test_mucha_afinidad_no_gana_a_la_energia_objetivo():
         assert elegida.energia == 8
         assert elegida.titulo != "Respira"
 
-
+# cambio 2 solicitado por el profesor: testear ponderado
 def test_ponderado_multiplica_el_puntaje():
     oyente = Oyente("Ana")
     oyente.registrar_escucha(A, completa=True)
@@ -216,6 +217,7 @@ def test_con_no_repetir_la_radio_no_se_encierra_en_pocas_canciones():
     assert len(canciones) == 10
     assert len(set(canciones)) == 10
 
+# cambio 1 solicitado por el profesor: separar el flujo de con_pausas
 def test_con_pausas_intercala_una_pausa_cada_n():
     # No hace falta catálogo ni oyente: con_pausas sirve para cualquier flujo.
     assert list(islice(con_pausas(iter("abcdef"), 2, "P"), 6)) == ["a", "b", "P", "c", "d", "P"]
