@@ -49,7 +49,7 @@ Las decisiones de diseño y las alternativas que descartamos están en `DISENO.m
 
 ## Cómo correrlo
 
-Hace falta Python 3 y `pytest` para los tests.
+Hace falta "Python 3.9+" y `pytest` para los tests.
 
 ### Instalar pytest
 
