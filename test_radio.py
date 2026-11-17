@@ -21,7 +21,7 @@ def nueva_radio(canciones=(A, B, C), n_pausa=2):
 
 
 def test_no_se_puede_crear_cancion_con_bpm_invalidos():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError): # verifica que este codigo levante Valueerror. Se usa para probar que las validaciones funcionen.
         Cancion(9, "X", "Y", bpm=0, duracion=100)
 
 

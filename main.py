@@ -47,8 +47,15 @@ def main(cantidad: int = 12) -> None:
     # islice corta el flujo infinito después de `cantidad` elementos.
     flujo = islice(radio.flujo(oyente), cantidad)
 
+
+    '''
+    Cada vuelta del for pide un elemento. Eso despierta a con_pausas , que 
+    le pide una canción a Radio.canciones , que llama a elegir_siguiente , 
+    que llama a elegir con el historial de ese momento
+    '''
+
     for numero, elemento in enumerate(flujo, 1):
-        if isinstance(elemento, Cancion):
+        if isinstance(elemento, Cancion):   # isinstance pregunta si el elemento es de la clase Cancion. Si no, es una Pausa.
             completa = escucho_completa(elemento)
             oyente.registrar_escucha(elemento, completa)  # la radio aprende
             print(texto_cancion(numero, elemento, completa))
