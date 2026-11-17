@@ -111,3 +111,9 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 **Qué se pidió:** que escribiera las predicciones de `PREDICCIONES.md`.
 **Qué devolvió:** predijo los 5 casos leyendo el código, sin correrlo, y después los corrió y comparó. Las 5 predicciones coincidieron con el resultado. Las predicciones están firmadas como Claude (IA) en el archivo.
 
+## 16. 16/11 - Energía
+
+**Quién:** Delfina. **Herramienta:** Claude
+**Qué se pidió:** que se calcule la energía de cada canción de `catalogo_datos.py`.
+**Qué devolvió:** una lista con la energía de cada canción.
+**¿En qué la usamos?:** agregamos comentarios al lado de las canciones para facilitar las predicciones.
