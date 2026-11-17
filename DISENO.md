@@ -141,6 +141,8 @@ En el proyecto no hay herencia entre nuestras clases. Las piezas se arman **por 
 
 Por la radio pueden salir canciones y pausas, así que el flujo es de tipo `Iterator[Emitible]`. `Emitible` es un `Protocol` (en `modelo.py`): una interfaz que pide tener `duracion`. `Cancion` y `Pausa` la cumplen sin heredar de ella, solo por tener ese atributo (tipado estructural). El único lugar donde distinguimos el tipo es `main.py`, que muestra distinto una canción y una pausa.
 
+En el UML (`UML.md`) la relación entre `Cancion`, `Pausa` y `Emitible` está dibujada con la flecha de herencia, porque es la más cercana entre las que vimos en clase y se lee como "es un Emitible". En el código no hay herencia: ninguna clase escribe `class Cancion(Emitible)`, solo cumplen la interfaz. En UML estándar esto se dibuja con la flecha de *realización* (línea punteada con triángulo vacío).
+
 **Alternativa descartada: que `Pausa` herede de `Cancion`.** Una pausa sería una "canción sin artista": tendría que tener id, bpm y artista inventados, rompería las validaciones de `Cancion`, y los filtros y puntajes la tratarían como una canción más.
 
 **Alternativa descartada: una subclase `RadioConPausas(Radio)`.** Cada regla de flujo nueva (pausas, bloques temáticos, intensidad creciente) sería otra subclase, y combinar dos reglas obligaría a herencia múltiple. Con `con_pausas` cada regla es una función que envuelve el flujo, y se pueden encadenar.
