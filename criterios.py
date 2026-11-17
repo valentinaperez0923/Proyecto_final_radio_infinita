@@ -7,13 +7,13 @@
 datos cada criterio devuelve siempre lo mismo.
 """
 
-from typing import Callable
+from typing import Callable     # para darle un nombre corto a los tipos de las funciones
 
 from modelo import Cancion, Escucha
 
 # Nombres cortos para los tipos, así el resto del programa se lee mejor.
 Escuchas = tuple[Escucha, ...]
-Puntaje = Callable[[Cancion, Escuchas], float]
+Puntaje = Callable[[Cancion, Escuchas], float] # [lo que recibe, lo que devuelve]
 Filtro = Callable[[Cancion, Escuchas], bool]
 
 

@@ -41,6 +41,9 @@ def elegir(canciones: tuple[Cancion, ...], escuchas: Escuchas,
 
 T = TypeVar("T")
 
+# TypeVar es una anotación que dice que con_pausas funciona con cualquier tipo de elemento, 
+# no solo canciones. No cambia lo que hace el programa; solo documenta que la función es genérica
+
 def con_pausas(elementos: Iterable[T], n: int, pausa: T) -> Iterator[T]:
     """Intercala `pausa` después de cada `n` elementos. No sabe de canciones."""
     if n < 1:
@@ -72,12 +75,16 @@ class Radio:
     def canciones(self, oyente: Oyente) -> Iterator[Cancion]:
         """Flujo infinito de canciones, sin pausas."""
         while True:
-            yield self.elegir_siguiente(oyente)
+            yield self.elegir_siguiente(oyente) # yield va entregando valores de a uno, cada yield entrega uno y la funcion se queda en pausa hasta que le piden el siguiente. Permite tener un flujo infinito sin quedarse sin memoria.
 
     def flujo(self, oyente: Oyente) -> Iterator[Emitible]:
         """Las canciones con una Pausa cada n_pausa canciones.
 
         Quien consume el flujo tiene que registrar cada escucha en el oyente
         antes de pedir el siguiente elemento: así la radio aprende.
+
+        El flujo es perezoso: no se calculan las canciones que vienen después de la primera hasta que se piden.
+
+        Hay que cortarlo con islice si no se quiere que sea infinito.
         """
         return con_pausas(self.canciones(oyente), self.n_pausa, self.pausa)

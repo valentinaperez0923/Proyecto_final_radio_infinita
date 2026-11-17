@@ -11,7 +11,7 @@ class Emitible(Protocol):
     @property   # indica que lo de abajo es una propiedad, no un método. Se puede acceder como si fuera un atributo, pero se calcula al momento de acceder.
     def duracion(self) -> float: ... # para poder salir por la radio, tiene que tener una duracion y ser un float. El ... indica que aca no va nada mas, solo el aviso
 
-
+# dataclass para escribir automaticamente el init
 @dataclass(frozen=True) # frozen=True hace que la clase sea inmutable, es decir, que no se puedan cambiar los atributos después de crear una instancia.
 class Cancion:
     id: int
@@ -39,7 +39,7 @@ class Cancion:
 @dataclass(frozen=True) 
 class Pausa:
     duracion: float   # en segundos. Cumple con Emitible porque tiene duracion
-    def __post_init__(self):
+    def __post_init__(self):   # se ejecuta dsp del init, ahi van las validaciones. 
         if self.duracion <= 0:
             raise ValueError("La duración de la pausa tiene que ser mayor que 0")
 
@@ -70,7 +70,7 @@ class Oyente:
         if memoria < 1:
             raise ValueError("La memoria tiene que ser al menos 1")
         self.nombre = nombre
-        self._escuchas: deque[Escucha] = deque(maxlen=memoria) 
+        self._escuchas: deque[Escucha] = deque(maxlen=memoria) # deque es una lista con tope, cuando esta llena y entra una nueva escucha, borra la mas vieja
 
 
     def registrar_escucha(self, cancion: Cancion, completa: bool) -> None:  # recibe la cancion y si se escucho completa. El -> None dice que no devuelve nada, solo anota.
