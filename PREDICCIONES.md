@@ -124,7 +124,12 @@ o.registrar_escucha(c[3], completa=True)    # Calma, Río Lento
 print(variedad(3)(c[2], o.escuchas), variedad(2)(c[2], o.escuchas), variedad(3)(c[8], o.escuchas))
 ```
 
-**Predicción** (Olivia), 17/11.
+**Predicción:** (Olivia), 17/11. Se imprime 'False, True, True'.
+- **Primera:** la radio mira las últimas tres canciones y como Subida es de Los Pesos no puede sonar, ya que Arranque también es de Los Pesos. No importa que esta se haya cortado, ya que solo se fija en el artista.
+- **Segunda:** Acá se fija solo en las dos más recientes, por lo tanto Subida si puede sonar, ya que Arranque quedó afuera.
+- **Tercera:** mira las últimas tres canciones y como no hay ninguna de Mara Sol, Calentando puede sonar.
+**Resultado:** False, True, True
+**¿Coincidió? ¿Por qué?:** Sí, la escucha cortada si cuenta, se fija solo en el artista.
 
 ## 9. el límite de memoria del oyente
 
@@ -137,4 +142,6 @@ for c in CATALOGO.canciones[:5]:
 print([e.cancion.id for e in o.escuchas])
 ```
 
-**Predicción:** (Olivia), 17/11
+**Predicción:** (Olivia), 17/11. Se imprime '[3, 4, 5]', ya que el oyente solo puede recordar las últimas 3 canciones, escucha 1, 2, 3, 4 y 5 en orden, cuando llega a la 4 olvida la 1 y cuando escucha la 5 olvida la 2.
+**Resultado:** '[3, 4, 5]'
+**¿Coincidió? ¿Por qué?:** Sí, la memoria de 3 canciones hace que cada vez que el oyente escuche una nueva, se olvide de la más vieja, ej: cuando escucha la 4 se olvida la 1. 
