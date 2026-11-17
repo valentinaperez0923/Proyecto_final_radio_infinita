@@ -107,9 +107,10 @@ Registramos cada uso de IA: qué pedimos, qué devolvió, qué corregimos o rech
 
 ## 15. 16/11 – Predicciones
 
-**Quién:** Malena. **Herramienta:** Claude
-**Qué se pidió:** que escribiera las predicciones de `PREDICCIONES.md`.
-**Qué devolvió:** predijo los 5 casos leyendo el código, sin correrlo, y después los corrió y comparó. Las 5 predicciones coincidieron con el resultado. Las predicciones están firmadas como Claude (IA) en el archivo.
+**Quién:** Delfina y Olivia. **Herramienta:** Claude
+**Qué se pidió:** que escribiera un par de predicciones para `PREDICCIONES.md`. 
+**¿Para qué?:** esto para tener una guía al momento de realizar nuestras propias predicciones.
+**Qué devolvió:** predijo 3 casos leyendo el código, sin correrlo, y después los corrió y comparó. Las 3 predicciones coincidieron con el resultado obtenido después de correr el código. Las predicciones están firmadas como Claude (IA) en el archivo, para distinguirlas de las que hicimos nosotras.
 
 ## 16. 16/11 - Energía
 

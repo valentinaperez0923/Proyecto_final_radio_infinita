@@ -1,9 +1,8 @@
 # Predicciones
 
-Antes de correr una función clave anotamos qué esperamos que devuelva. Después la corremos y comparamos. Si no coincide, explicamos por qué: si nos equivocamos nosotras o si encontramos un error en el código.
+Antes de correr una función clave anotamos qué esperamos que devuelva. Después la corremos y comparamos, si no coincide, explicamos por qué: si nos equivocamos nosotras o si encontramos un error en el código.
 
 **Importante:** la predicción se escribe *antes* de correr el código.
-
 
 Para correr cada ejemplo: abrir una terminal en la carpeta del proyecto, escribir `python`, y pegar el código.
 
@@ -56,33 +55,7 @@ print(la_que_hace_mas_que_no_suena(tres, o.escuchas).titulo)
 - **Resultado:** `Sprint`
 - **¿Coincidió? ¿Por qué?:** Sí. La id 1 sonó dos veces, pero lo que cuenta es la última vez que sonó, no cuántas veces.
 
-## 4. `con_pausas` con un flujo que sí termina
-
-```python
-from radio import con_pausas
-print(list(con_pausas(range(7), 3, "P")))
-```
-
-- **Predicción:** (Claude(IA)), 16/11. `[0, 1, 2, 'P', 3, 4, 5, 'P', 6]`. Después del 6 no hay pausa, porque `range(7)` termina antes de juntar otros 3 elementos.
-- **Resultado:** `[0, 1, 2, 'P', 3, 4, 5, 'P', 6]`
-- **¿Coincidió? ¿Por qué?:** Sí. `con_pausas` funciona con cualquier flujo, también con uno que termina, y pone la pausa solo cuando se juntaron `n` elementos.
-
-## 5. `elegir` con otra energía objetivo
-
-```python
-from modelo import Oyente
-from catalogo_datos import CATALOGO
-from criterios import afinidad, energia_objetivo, ponderado
-from radio import Radio
-radio = Radio(CATALOGO, [ponderado(0.5, afinidad), energia_objetivo(4)], [], n_pausa=4)
-print(radio.elegir_siguiente(Oyente("Prueba")).titulo)
-```
-
-- **Predicción:** (Claude(IA)), 16/11. Sin historial la afinidad vale 0 para todas, así que gana la canción con energía más cerca de 4. La única de energía 4 es Bajada (100 bpm → 4), así que se imprime `Bajada`.
-- **Resultado:** `Bajada`
-- **¿Coincidió? ¿Por qué?:** Sí. Sin historial la afinidad no influye y decide la energía objetivo, como dice la decisión 11.
-
-## 6. la radio sin registrar escuchas
+## 4. la radio sin registrar escuchas
 
 ```python
 from itertools import islice
@@ -99,7 +72,7 @@ print([c.titulo for c in islice(radio.canciones(Oyente("Prueba")), 4)])
 **Resultado:** ['Subida', 'Subida', 'Subida', 'Subida']
 **¿Coincidió?:** Sí. `Radio.canciones` llama a `elegir_siguiente` en cada vuelta y como nadie registra escuchas, `elegir` recibe siempre los mismos datos y devuelve siempre la misma canción. Es el riesgo de la decisión 5: la radio solo aprende si quien consume el flujo registra cada escucha antes de pedir la siguiente.
 
-## 7. `con_pausas` con n = 1
+## 5. `con_pausas` con n = 1
 
 ```python
 from radio import con_pausas
@@ -110,7 +83,7 @@ print(list(con_pausas("abc", 1, "P")))
 **Resultado:** ['a', 'P', 'b', 'P', 'c', 'P']
 **¿Coincide?:** Sí. `yield (elemento)` sale antes del `if`, y con n = 1 el `if` se cumple en todas las vueltas, así que cada letra va seguida de una pausa. A diferencia de la predicción 4, donde el último grupo quedó incompleto y no tuvo pausa, acá cada grupo tiene un solo elemento y siempre se completa.
 
-## 8. el filtro `variedad` con distintas ventanas
+## 6. el filtro `variedad` con distintas ventanas
 
 ```python
 from modelo import Oyente
@@ -131,7 +104,7 @@ print(variedad(3)(c[2], o.escuchas), variedad(2)(c[2], o.escuchas), variedad(3)(
 **Resultado:** False, True, True
 **¿Coincidió? ¿Por qué?:** Sí, la escucha cortada si cuenta, se fija solo en el artista.
 
-## 9. el límite de memoria del oyente
+## 7. el límite de memoria del oyente
 
 ```python
 from modelo import Oyente

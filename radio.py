@@ -14,7 +14,7 @@ def la_que_hace_mas_que_no_suena(canciones: tuple[Cancion, ...],
     for posicion, escucha in enumerate(escuchas):
         ultima_vez[escucha.cancion.id] = posicion
 
-    # Las que nunca sonaron valen -1, así que ganan. Si empatan, el id más chico.
+    # Las que nunca sonaron valen -1, así que ganan. Si empatan, gana el id más chico.
     return min(canciones, key=lambda c: (ultima_vez.get(c.id, -1), c.id))
 
 
