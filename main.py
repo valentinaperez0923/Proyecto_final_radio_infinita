@@ -42,7 +42,7 @@ def main(cantidad: int = 12) -> None:
         n_pausa=4,
         duracion_pausa=60,
     )
-    oyente = Oyente("Ana")
+    oyente = Oyente("Ana", memoria=10)
 
     # islice corta el flujo infinito después de `cantidad` elementos.
     flujo = islice(radio.flujo(oyente), cantidad)
